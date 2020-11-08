@@ -3,7 +3,11 @@ const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
 
+// Custom middlewares
 const { notFound, errorHandler } = require('./middleware/errorHandlers');
+
+// DB connection
+require('./db/connection');
 
 const app = express();
 app.use(morgan('dev'));
