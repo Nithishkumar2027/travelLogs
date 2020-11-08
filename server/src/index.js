@@ -32,6 +32,6 @@ app.use('/api/logs', logs);
 app.use(notFound);
 app.use(errorHandler);
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 // eslint-disable-next-line no-console
 app.listen(port, () => console.log(`Listening at http://localhost:${port}`));
