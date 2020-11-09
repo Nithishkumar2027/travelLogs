@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import ReactMapGL, { Marker } from 'react-map-gl';
+import ReactMapGL, { Marker, Popup } from 'react-map-gl';
 
 import { listLogEntries } from './API'
 
 const App = () => {
-  const [logEntries, setLogEntries] = useState([])
+  const [logEntries, setLogEntries] = useState([]);
+  const [showPopup, setShowPopup] = useState({});
   const [viewPort, setViewPort] = useState({
     width: '100vw',
     height: '100vh',
@@ -16,6 +17,7 @@ const App = () => {
   useEffect(() => {
     (async () => {
       const logEntries = await listLogEntries();
+      console.log(logEntries)
       setLogEntries(logEntries)
     })();
   }, [])
@@ -29,23 +31,46 @@ const App = () => {
     >
       {
         logEntries.map(entry => (
-          <Marker
-            key={entry._id}
-            latitude={entry.latitude}
-            longitude={entry.longitude}
-          // offsetLeft={-12}
-          // offsetTop={-24}
-          >
+          <>
+            <Marker
+              key={entry._id}
+              latitude={entry.latitude}
+              longitude={entry.longitude}
+            // offsetLeft={-12}
+            // offsetTop={-24}
+            >
+              <div onClick={() => setShowPopup({
+                // ...showPopup,
+                [entry._id]: true,
+              })}>
+                <img src="https://i.imgur.com/y0G5YTX.png" className="marker" alt="marker" />
+              </div>
 
-            <div>
-              <img src="https://i.imgur.com/y0G5YTX.png" className="marker" alt="marker" />
-            </div>
-
-          </Marker>
+            </Marker>
+            {
+              showPopup[entry._id] ? (
+                <Popup
+                  latitude={entry.latitude}
+                  longitude={entry.longitude}
+                  closeButton={true}
+                  closeOnClick={false}
+                  dynamicPosition={true}
+                  onClose={() => setShowPopup({})}
+                  anchor="top"
+                >
+                  <div className="popup">
+                    <h3>{entry.title}</h3>
+                    <p>{entry.comments}</p>
+                    <small>Visited on: {new Date(entry.visitDate).toLocaleDateString()}</small>
+                  </div>
+                </Popup>
+              ) : null
+            }
+          </>
         ))
       }
+
     </ReactMapGL>
   );
 }
-// https://i.imgur.com/y0G5YTX.png
 export default App;
