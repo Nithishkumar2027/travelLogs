@@ -39,6 +39,7 @@ const App = () => {
       onviewPortChange={setviewPort}
       mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
       mapStyle="mapbox://styles/nithishkumar/ckhcad63w1ab51apm08g5k6i2"
+      onDblClick={showAddMarkerPopup}
     >
       {
         logEntries.map(entry => (
